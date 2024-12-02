@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBlog - Developer Community Platform</title>
+    <link rel="stylesheet" href="index.css"/>
+</head>
+<body class="light-theme">
+    <header class="header">
+        <div class="logo">👩‍💻DevBlog</div>
+        <nav class="nav-links">
+            <button id="blogs-btn">Blogs</button>
+            <button id="community-btn">Community</button>
+            <button id="latest-btn">Latest</button>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle">🌙</button>
+    </header>
+    
+
+    <div class="main-blogpage">
+        <div class="landing page">
+            <h1 class="informed">Stay informed with the latest updates,  <span class="typing-effect" id="typing-text"></span></h1>
+             <p class="informed2">Stay informed with the latest updates and blog highlights,featuring essential insights and blogs.</p>
+             <div class="contained">
+                
+                <div class="image1">
+                    <div class="buttons">
+                        <button class="js">Javascript</button>
+                        <button class="js">Python</button>
+                        <button class="js">Typescript</button>
+                        <button class="js">+</button>
+                    </div>
+                    <img src="images/dev page.png" alt="blogimage1" class="dev"/>
+                </div>
+                <div class="image2">
+                   <img src="images/comment.png" alt="blogimage1" class="comma"/>
+               </div>
+             </div>
+            <div class="hightlight-points">
+                  <ul>
+                    <li><img src="images/arrow.svg" alt="arrow" class="arrow"/> &nbsp;Fast</li>
+                    <li><img src="images/arrow.svg" alt="arrow" class="arrow"/> &nbsp;Educational</li>
+                    <li><img src="images/arrow.svg" alt="arrow" class="arrow"/> &nbsp;Up to date</li>
+                    <li><img src="images/arrow.svg" alt="arrow" class="arrow"/> &nbsp;Reliable source</li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content" id="main-content">
+        <!-- Dynamic content will be loaded here -->
+    </main>
+
+    <script>
+        // Application State
+        const state = {
+            currentSection: 'blogs',
+            isDarkMode: false,
+            blogPosts: [
+                {
+                    id: 1,
+                    title: 'React 18 Deep Dive',
+                    author: 'Jane Doe',
+                    date: 'Nov 15, 2024',
+                    excerpt: 'Exploring the new features and performance improvements in React 18...',
+                    views: 1245,
+                    comments: []
+                },
+                {
+                    id: 2,
+                    title: 'Advanced TypeScript Patterns',
+                    author: 'John Smith',
+                    date: 'Dec 1, 2024',
+                    excerpt: 'Mastering advanced type system techniques in TypeScript...',
+                    views: 987,
+                    comments: []
+                },
+                {
+                    id: 3,
+                    title: 'Building Scalable APIs with Node.js',
+                    author: 'Emily Davis',
+                    date: 'Nov 25, 2024',
+                    excerpt: 'Learn how to design and develop scalable APIs using Node.js and Express...',
+                    views: 1456,
+                    comments: []
+                },
+                {
+                    id: 4,
+                    title: 'CSS Grid vs. Flexbox: When to Use What?',
+                    author: 'Michael Brown',
+                    date: 'Dec 2, 2024',
+                    excerpt: 'Understand the key differences between CSS Grid and Flexbox...',
+                    views: 875,
+                    comments: []
+                },
+                {
+                    id: 5,
+                    title: 'Machine Learning with Python for Beginners',
+                    author: 'Anna Wilson',
+                    date: 'Nov 20, 2024',
+                    excerpt: 'A beginner-friendly guide to understanding machine learning using Python...',
+                    views: 1567,
+                    comments: []
+                },
+                {
+                    id: 6,
+                    title: 'Beginner Friendly Python Projects',
+                    author: 'Tom Wilson',
+                    date: 'Nov 23, 2024',
+                    excerpt: 'A beginner-friendly guide to understanding python using real world projects...',
+                    views: 1367,
+                    comments: []
+                }
+            ],
+            communityMembers: [
+                { id: 1, name: 'Alice Johnson', role: 'React Expert', contributions: 124 },
+                { id: 2, name: 'Bob Williams', role: 'Backend Guru', contributions: 98 }
+            ],
+            latestContent: [
+                { 
+                    id: 1, 
+                    type: 'Blog', 
+                    title: 'Serverless Architecture in 2024', 
+                    date: 'Dec 2, 2024' 
+                },
+                { 
+                    id: 2, 
+                    type: 'Discussion', 
+                    title: 'AI in Software Development', 
+                    date: 'Dec 1, 2024' 
+                }
+            ]
+        };
+
+        // Render Functions
+        function renderBlogs() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <section class="section">
+                    <h2 class="section-title">Developer Blogs</h2>
+                    <div class="blog-grid">
+                        ${state.blogPosts.map(post => `
+                            <div class="blog-card">
+                                <h3 class="blog-card-title">${post.title}</h3>
+                                <div class="blog-card-meta">
+                                    <span>${post.author}</span>
+                                    <span>${post.date}</span>
+                                </div>
+                                <p>${post.excerpt}</p>
+                                <div class="blog-card-actions">
+                                    <div class="blog-stats">
+                                        <span>👀 ${post.views} Views</span>
+                                        <span>💬 <span class="comment-count" id="comment-count-${post.id}">0</span> Comments</span>
+                                        <button class="toggle-comments-btn" data-post-id="${post.id}"><img src="images/arrows.png" alt="arrow" class="arrow" /></button>
+                                    </div>
+                                    <a href="URL_HERE" class="read-more-btn">Read More</a>
+                                </div>
+                                <div class="comment-section">
+                                     <h4>Comments</h4>
+                                     <div class="comments-list" id="comments-list-${post.id}"></div>
+                                     <textarea id="comment-input-${post.id}" placeholder="Add a comment..." rows="3"></textarea>
+                                     <button class="add-comment-btn" data-post-id="${post.id}">Comment</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderCommunity() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <section class="section">
+                    <h2 class="section-title">Developer Community</h2>
+                    <div class="community-grid">
+                        ${state.communityMembers.map(member => `
+                            <div class="community-card">
+                                <div>
+                                    <h3>${member.name}</h3>
+                                    <p>${member.role}</p>
+                                </div>
+                                <span>⭐ ${member.contributions} Contributions</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderLatest() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <section class="section">
+                    <h2 class="section-title">Latest in Tech</h2>
+                    <div class="latest-list">
+                        ${state.latestContent.map(item => `
+                            <div class="latest-item">
+                                <div>
+                                    <span class="latest-type">${item.type}</span>
+                                    <h3>${item.title}</h3>
+                                </div>
+                                <span>${item.date}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        // Event Listeners
+        document.getElementById('blogs-btn').addEventListener('click', () => {
+            state.currentSection = 'blogs';
+            renderBlogs();
+        });
+
+        document.getElementById('community-btn').addEventListener('click', () => {
+            state.currentSection = 'community';
+            renderCommunity();
+        });
+
+        document.getElementById('latest-btn').addEventListener('click', () => {
+            state.currentSection = 'latest';
+            renderLatest();
+        });
+
+        
+        // Theme Toggle
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            state.isDarkMode = !state.isDarkMode;
+            document.body.classList.toggle('dark-theme');
+            document.getElementById('theme-toggle').textContent = state.isDarkMode ? '☀️' : '🌙';
+        });
+
+         //Typing effect
+        const words = ["Blog highlights 😊", "Tech Insights 🤩", "Weekly Wrap 🤧", "Trending Topics 😍"]; // The words to type
+        let index = 0; // Current word index
+        let charIndex = 0; // Current character index
+        const typingText = document.getElementById("typing-text");
+
+        function type() {
+            if (index < words.length) {
+                if (charIndex < words[index].length) {
+                typingText.textContent += words[index].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 100); // Adjust typing speed here (100ms)
+                } else {
+                setTimeout(() => {
+                    erase(); // Start erasing after typing the word
+                }, 1000); // Pause before erasing (1 second)
+                }
+            }
+        }
+
+        function erase() {
+            if (charIndex > 0) {
+                typingText.textContent = typingText.textContent.slice(0, -1);
+                charIndex--;
+                setTimeout(erase, 50); // Adjust erasing speed here (50ms)
+            } else {
+                    index = (index + 1) % words.length; // Cycle through words
+                    setTimeout(type, 500); // Pause before typing next word (0.5 seconds)
+                }
+        }
+        //Function render comments
+        function renderComments(postId) {
+            const commentsList = document.getElementById(`comments-list-${postId}`);
+            const commentCountDisplay = document.getElementById(`comment-count-${postId}`);
+            const post = state.blogPosts.find(post => post.id === postId);
+    
+            // Ensure that comments is an array
+            const comments = Array.isArray(post.comments) ? post.comments : [];
+    
+            // Update the comment count
+            commentCountDisplay.textContent = comments.length;
+
+            // Render the comments in the comments list
+            commentsList.innerHTML = comments.map(comment => `<div class="comment-item">${comment}</div>`).join('');
+        }
+
+        // Event listener for adding comments
+        document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('add-comment-btn')) {
+        const postId = parseInt(event.target.getAttribute('data-post-id'));
+        const commentInput = document.getElementById(`comment-input-${postId}`);
+        const commentText = commentInput.value.trim();
+
+        if (commentText) {
+            // Find the post and add the comment
+            const post = state.blogPosts.find(post => post.id === postId);
+            if (!post.comments) {
+                post.comments = []; // Initialize comments array if it doesn't exist
+            }
+            post.comments.push(commentText); // Add the new comment
+
+            // Clear the input
+            commentInput.value = '';
+
+            // Re-render the comments
+            renderComments(postId);
+        }
+    }
+});
+        //Event Listener for toggling comments
+        document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('toggle-comments-btn')) {
+        const postId = parseInt(event.target.getAttribute('data-post-id'));
+        const commentSection = document.getElementById(`comment-section-${postId}`);
+        
+        // Toggle the visibility of the comment section
+        if (commentSection.style.display === 'none') {
+            commentSection.style.display = 'block';
+            renderComments(postId); // Render comments when showing
+        } else {
+            commentSection.style.display = 'none';
+        }
+    }
+});
+
+// Start the typing effect
+type();
+
+        // Initial Render
+        renderBlogs();
+    </script>
+</body>
+</html>
